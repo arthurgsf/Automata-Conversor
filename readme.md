@@ -1,3 +1,4 @@
+![Github commits](https://img.shields.io/github/commits-since/SubtitleEdit/subtitleedit/latest.svg?style=flat-square)
 # Automata Conversor
 
 A tool that converts [Nondeterministic Finite Automaton with ε-moves](https://en.wikipedia.org/wiki/Nondeterministic_finite_automaton) to simple NFA.  
