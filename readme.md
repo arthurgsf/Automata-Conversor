@@ -1,6 +1,6 @@
 # Automata Conversor
 
-A tool that converts [Nondeterministic Finite Automaton with ε-moves](https://en.wikipedia.org/wiki/Nondeterministic_finite_automaton).  
+A tool that converts [Nondeterministic Finite Automaton with ε-moves](https://en.wikipedia.org/wiki/Nondeterministic_finite_automaton) to simple NFA.  
 Built In pure C language.
 
 ## Getting Started
