@@ -13,4 +13,4 @@ Built In pure C language.
 ## Authors
 
 * **Arthur Guilherme** - [arthurgsf](https://github.com/arthurgsf)
-* **Weverto Lucas** - [wevertor](https://github.com/wevertor)
+* **Weverton Lucas** - [wevertor](https://github.com/wevertor)
