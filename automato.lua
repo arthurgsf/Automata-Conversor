@@ -2,7 +2,7 @@ automata = {};
 
 function automata.new()
 	local a = {};
-	-- attribute --
+	-- attributes --
 	a.Q = automata.getQ();
 	a.E = automata.getE();
 	a.F = automata.getF();
@@ -15,14 +15,18 @@ function automata.new()
 	a.getD = automata.getD;
 end
 
-function automata.getE(self)
+
+--[[
+	function automata.getE()
+	Used to get the char of Σ, returns a table of char Ex: {"a","b","c"}
+]]
+function automata.getE()
 	local e = {};
 	local str;
 	local i = 1;
 
-	print("Input the alphabet: ");
+	print("Insira as letras do alfabeto, separadas por espaços. Ex.: a b c");
 	str = io.read();
-
 	for q in string.gmatch(str, "[^%s]+") do
 		e[i] = q;
 		i = i+1;
@@ -31,19 +35,26 @@ function automata.getE(self)
 	return e;
 end
 
-function automato.getF(self)
+
+--[[
+	function automata.getE()
+	Used to get all final states of the automaton. Returns a table of char. Ex.: {"q0","q1"}
+]]
+function automata.getF(Q)
 	local f ={}
-	local str = io.read()
+	local str
 	local i = 1
 
+	print("Insira os estados finais do autômato, separados por espaços. Ex.: q0 q1 q2")
+	str = io.read()
 	for q in string.gmatch(str,"[^%s]+") do
-		for j = 1 ,#self.Q do
-			if(q == self.Q[j])then
-				
+		for j = 1 ,#Q do -- Check if the state q is part of the Q table
+			if(q == Q[j])then
+				f[i] = q
+				i = i+1
+				break
 			end
 		end
-		f[i] = q
-		i = i+1
 	end
 
 	return f
