@@ -1,3 +1,5 @@
+require "States"
+
 automata = {};
 
 function automata.new()
@@ -5,7 +7,7 @@ function automata.new()
 	-- attributes --
 	a.Q = automata.getQ();
 	a.E = automata.getE();
-	a.F = automata.getF();
+	a.F = automata.getF(a.Q);
 	a.D = automata.getD();
 
 	-- methods --
@@ -42,37 +44,39 @@ end
 ]]
 
 function automata.getQ()
-    local f={}
+    local Q={}
     local str
     local i = 1
   
     print("Insira os estados do autômato, separado por espaços. Ex.: q0 q1 q2")
     str = io.read()
   
-    for q in string.gmatch(str, "[^%s]+") do
-        f[i] = q;
+	for q in string.gmatch(str, "[^%s]+") do
+		Q[i] = State;
+		Q[i]["id"] = q;
         i = i+1;
     end
 end
 
 function automata.getF(Q)
-	local f ={}
-	local str
-	local i = 1
+	local f ={};
+	local str;
+	local i = 1;
 
 	print("Insira os estados finais do autômato, separados por espaços. Ex.: q0 q1 q2")
 	str = io.read()
 	for q in string.gmatch(str,"[^%s]+") do
 		for j = 1 ,#Q do -- Check if the state q is part of the Q table
 			if(q == Q[j])then
-				f[i] = q
-				i = i+1
+				f[i] = q;
+				Q[j]["isFinal"] = true;
+				i = i+1;
 				break
 			end
 		end
 	end
 
-	return f
+	return f;
 end
 
 
