@@ -33,13 +33,15 @@ function automata.getE(self)
 		end
 	end
 	
-	self.e = e
+	self.E = e
 end
 
 
 --[[
 	function automata.getQ()
-	Used to get all states of the automaton. Returns a table of char. Ex.: {"q0","q1"}
+	Used to get all states of the automaton. Returns a 2d table.
+	Ex.: 
+	{{id = "q1"},{id = "q2"}}
 ]]
 
 function automata.getQ(self)
@@ -50,10 +52,9 @@ function automata.getQ(self)
 	print("Insira uma sequência de estados separados por espaços. Ex.: q0 q1 q2")
   	str = io.read()
 
-	for state in string.gmatch(str, "%a+%d*") do
-		if (state == "nil" or state == "null" or state=="-" or state=="none" or state == "nada" or state == "nd") then
-			table.insert(q , nil)
-		elseif(string.match(state,"%a+%d+") and not find(q,state))then
+	for id in string.gmatch(str, "%a+%d+") do
+		if (not find(q,id))then
+			local state = State.new(id)
 			table.insert(q , state)
 		end
 	end
@@ -67,19 +68,20 @@ end
 ]]
 
 function automata.getF(self)
-	local Q = self.Q
+
+	local q = self.Q
 	local f ={}
 	local str
 
 	print("Insira os estados finais do autômato, separados por espaços. Ex.: q0 q1 q2")
 	str = io.read()
 
-	for state in string.gmatch(str,"[^%s]+") do
-		if(find(Q,state) and not find(f, state))then
+	for id in string.gmatch(str,"%a+%d+") do
+		local state = find(q,id)
+		if(state and not find(f,state.id))then
 			table.insert(f , state)
 		end
 	end
-
 	self.F = f
 end
 
@@ -106,12 +108,29 @@ function automata.getD(self)
 	local d = {}
 
 	for i,state in pairs(self.Q)do
-		d[state] = {}
+
+		d[state.id] = {}
+
 		for j,symbol in pairs(self.E)do
-			print("Delta de "..state.." lendo "..symbol)
-			d[state][symbol] = getQ()
+
+			print("Delta de "..state.id.." lendo "..symbol)
+			
+			local str = io.read()
+			local stateTable = {}
+
+			for id in string.gmatch(str,"%a+%d+")do
+
+				local s = find(self.Q,id)
+
+				if(s and not find(stateTable,s.id))then
+
+					table.insert(stateTable,s)
+
+				end
+
+			end
+			d[state.id][symbol] = stateTable
 		end
 	end
-
 	self.D = d
 end
