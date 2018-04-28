@@ -1,4 +1,6 @@
 require "func"
+require "States"
+
 automata = {};
 
 function automata.new()
