@@ -42,17 +42,17 @@ end
 ]]
 
 function automata.getQ()
-  local f={}
-  local str
-  local i = 1
+    local f={}
+    local str
+    local i = 1
   
-  print("Insira os estados do autômato, separado por espaços. Ex.: q0 q1 q2")
-  str = io.read()
+    print("Insira os estados do autômato, separado por espaços. Ex.: q0 q1 q2")
+    str = io.read()
   
-  for q in string.gmatch(str, "[^%s]+") do
-    f[i] = q;
-    i = i+1;
-  end
+    for q in string.gmatch(str, "[^%s]+") do
+        f[i] = q;
+        i = i+1;
+    end
 end
 
 function automata.getF(Q)
