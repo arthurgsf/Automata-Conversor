@@ -55,7 +55,9 @@ function automata.getQ()
 		Q[i] = State;
 		Q[i]["id"] = q;
         i = i+1;
-    end
+	end
+	
+	return Q;
 end
 
 function automata.getF(Q)
@@ -82,7 +84,7 @@ end
 
 function automata.getD(Q, E)
 
-	local D = {}
+	local D = {};
 
 	for i,q in pairs(Q)do
 		D[q] = {}
@@ -92,6 +94,6 @@ function automata.getD(Q, E)
 		end
 	end
 
-	return D
+	return D;
 	
 end

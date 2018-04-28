@@ -18,6 +18,5 @@ function emptyfecho(q,D)
             fecho[n] = delta(q, n); --use a function that will be implemented in future 
         
         end
-    end
-      
+    end   
 end
