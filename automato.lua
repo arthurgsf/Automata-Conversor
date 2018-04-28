@@ -8,7 +8,7 @@ function automata.new()
 	a.F = automata.getF();
 	a.D = automata.getD();
 
-	-- method --
+	-- methods --
 	a.getQ = automata.getQ;
 	a.getE = automata.getE;
 	a.getF = automata.getF;
@@ -73,4 +73,21 @@ function automata.getF(Q)
 	end
 
 	return f
+end
+
+
+function automata.getD(Q, E)
+
+	local D = {}
+
+	for i,q in pairs(Q)do
+		D[q] = {}
+		for j,l in pairs(E)do
+			print("Delta de "..q.." lendo "..l)
+			D[q][l] = io.read()
+		end
+	end
+
+	return D
+	
 end
