@@ -7,8 +7,8 @@ function automata.new()
 	local a = {};
 	
 	--methods
-	a.getQ = automata.getQ;
 	a.getE = automata.getE;
+	a.getQ = automata.getQ;
 	a.getF = automata.getF;
 	a.getD = automata.getD;
 
@@ -32,7 +32,9 @@ function automata.getE(self)
 		  table.insert(e,q)
 		end
 	end
-	
+
+	table.insert(e,"&")
+
 	self.E = e
 end
 
@@ -116,20 +118,15 @@ function automata.getD(self)
 			print("Delta de "..state.id.." lendo "..symbol)
 			
 			local str = io.read()
-			local stateTable = {}
+			d[state.id][symbol] = {}
 
 			for id in string.gmatch(str,"%a+%d+")do
-
 				local s = find(self.Q,id)
 
-				if(s and not find(stateTable,s.id))then
-
-					table.insert(stateTable,s)
-
+				if(s and not find(d[state.id][symbol],s.id))then
+					table.insert(d[state.id][symbol],s)
 				end
-
 			end
-			d[state.id][symbol] = stateTable
 		end
 	end
 	self.D = d
