@@ -1,20 +1,18 @@
+require "func"
 require "States"
 
 automata = {};
 
 function automata.new()
 	local a = {};
-	-- attributes --
-	a.Q = automata.getQ();
-	a.E = automata.getE();
-	a.F = automata.getF(a.Q);
-	a.D = automata.getD();
-
-	-- methods --
+	
+	--methods
 	a.getQ = automata.getQ;
 	a.getE = automata.getE;
 	a.getF = automata.getF;
 	a.getD = automata.getD;
+
+	return a
 end
 
 
@@ -22,78 +20,117 @@ end
 	function automata.getE()
 	Used to get the char of Σ, returns a table of char Ex: {"a","b","c"}
 ]]
-function automata.getE()
+function automata.getE(self)
 	local e = {};
 	local str;
-	local i = 1;
 
 	print("Insira as letras do alfabeto, separadas por espaços. Ex.: a b c");
 	str = io.read();
-	for q in string.gmatch(str, "[^%s]+") do
-		e[i] = q;
-		i = i+1;
-	end
 
-	return e;
+	for q in string.gmatch(str, "%a") do
+		if(not find(e,q))then
+		  table.insert(e,q)
+		end
+	end
+	
+	self.E = e
 end
 
 
 --[[
-	function automata.getE()
+	function automata.getQ()
+	Used to get all states of the automaton. Returns a 2d table.
+	Ex.: 
+	{{id = "q1"},{id = "q2"}}
+]]
+
+function automata.getQ(self)
+	
+	local q = {}
+	local str
+  
+	print("Insira uma sequência de estados separados por espaços. Ex.: q0 q1 q2")
+  	str = io.read()
+
+	for id in string.gmatch(str, "%a+%d+") do
+		if (not find(q,id))then
+			local state = State.new(id)
+			table.insert(q , state)
+		end
+	end
+
+	self.Q = q
+end
+
+--[[
+	function automata.getF()
 	Used to get all final states of the automaton. Returns a table of char. Ex.: {"q0","q1"}
 ]]
 
-function automata.getQ()
-    local Q={}
-    local str
-    local i = 1
-  
-    print("Insira os estados do autômato, separado por espaços. Ex.: q0 q1 q2")
-    str = io.read()
-  
-	for q in string.gmatch(str, "[^%s]+") do
-		Q[i] = State;
-		Q[i]["id"] = q;
-        i = i+1;
-	end
-	
-	return Q;
-end
+function automata.getF(self)
 
-function automata.getF(Q)
-	local f ={};
-	local str;
-	local i = 1;
+	local q = self.Q
+	local f ={}
+	local str
 
 	print("Insira os estados finais do autômato, separados por espaços. Ex.: q0 q1 q2")
 	str = io.read()
-	for q in string.gmatch(str,"[^%s]+") do
-		for j = 1 ,#Q do -- Check if the state q is part of the Q table
-			if(q == Q[j])then
-				f[i] = q;
-				Q[j]["isFinal"] = true;
-				i = i+1;
-				break
-			end
+
+	for id in string.gmatch(str,"%a+%d+") do
+		local state = find(q,id)
+		if(state and not find(f,state.id))then
+			table.insert(f , state)
 		end
 	end
-
-	return f;
+	self.F = f
 end
 
 
-function automata.getD(Q, E)
+--[[
+	function automata.getD()
+	Used to get delta of the automaton. It returns a 3-dimensions table
+	{
+		q1 	= {
+			a	=  {"q1","q2"},
+			b 	=  {"q0",nil}
+		}
+		q2	= {
+			a	=  {"q2","q0"},
+			b 	=  {nil,nil}
+		}
+	}
+	where the key values are part of Q and E, respectively.
+	Ex.: a.D.q1.a //prints {"q1","q2"}
+]]
 
-	local D = {};
+function automata.getD(self)
 
-	for i,q in pairs(Q)do
-		D[q] = {}
-		for j,l in pairs(E)do
-			print("Delta de "..q.." lendo "..l)
-			D[q][l] = io.read()
+	local d = {}
+
+	for i,state in pairs(self.Q)do
+
+		d[state.id] = {}
+
+		for j,symbol in pairs(self.E)do
+
+			print("Delta de "..state.id.." lendo "..symbol)
+			
+			local str = io.read()
+			local stateTable = {}
+
+			for id in string.gmatch(str,"%a+%d+")do
+
+				local s = find(self.Q,id)
+
+				if(s and not find(stateTable,s.id))then
+
+					table.insert(stateTable,s)
+
+				end
+
+			end
+			d[state.id][symbol] = stateTable
 		end
 	end
-
-	return D;
-	
+	self.D = d
 end

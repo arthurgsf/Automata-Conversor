@@ -1,10 +1,16 @@
 State = {}
 
-State.id = nil;
-State.isFinal = false;
+function State.new(id)
+    local s = {}
+    
+    --Attributes
+    s.id = id;
 
-function State.newState(self, id)
-    self.id = id;
+    --Methods
+    s.isFinal = State.isFinal
+    s.next = State.next
+    s.fecho = State.fecho
+    return s
 end
 
 function State.isFinal(self, F)
@@ -13,16 +19,18 @@ function State.isFinal(self, F)
             return true;
         end
     end
+    return false
 end
 
-function State.next(self, e, D)
-    return D[self.id][e];
+function State.next(self, E, D)
+    return D[self.id][E];
 end
 
-function State.fecho(self, D)
+function State.closure(self, D)
     local fecho = {};
     local i = 1;
-    fecho.insert(self.id);
+    
+    fecho.insert(self);
 
     while (fecho[i]:next('&', D)~=nil) do
         i = i+1;
