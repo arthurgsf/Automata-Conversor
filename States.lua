@@ -6,7 +6,7 @@ State = {}
 ]]
 function State.new(id)
     local s = {}
-    
+
     --Attributes
     s.id = id;
 
@@ -23,7 +23,7 @@ end
 ]]
 function State.isFinal(self, F)
     for i, v in pairs(F) do
-        if (v == self.id) then
+        if (v.id == self.id) then
             return true;
         end
     end

@@ -1,12 +1,12 @@
-require "automato"
+require "automata"
 local a = automata.new()
 a:getE()
 a:getQ()
 a:getF()
 a:getD()
 
-local fecho = a.Q[1]:closure(a.D)
+local newF = a:getNewF()
 
-for k, v in pairs(fecho)do
+for k, v in pairs(newF)do
     print(v.id)
 end

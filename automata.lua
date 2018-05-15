@@ -5,13 +5,13 @@ automata = {};
 
 function automata.new()
 	local a = {};
-	
+
 	--methods
 	a.getE = automata.getE;
 	a.getQ = automata.getQ;
 	a.getF = automata.getF;
 	a.getD = automata.getD;
-
+	a.getNewF = automata.getNewF
 	return a
 end
 
@@ -42,15 +42,15 @@ end
 --[[
 	function automata.getQ()
 	Used to get all states of the automaton. Returns a 2d table.
-	Ex.: 
+	Ex.:
 	{{id = "q1"},{id = "q2"}}
 ]]
 
 function automata.getQ(self)
-	
+
 	local q = {}
 	local str
-  
+
 	print("Insira uma sequência de estados separados por espaços. Ex.: q0 q1 q2")
   	str = io.read()
 
@@ -116,7 +116,7 @@ function automata.getD(self)
 		for j,symbol in pairs(self.E)do
 
 			print("Delta de "..state.id.." lendo "..symbol)
-			
+
 			local str = io.read()
 			d[state.id][symbol] = {}
 
@@ -130,4 +130,18 @@ function automata.getD(self)
 		end
 	end
 	self.D = d
+end
+
+function automata.getNewF(self)
+	local newF = {}
+	for k, v in pairs(self.Q)do
+		local temp_closure = v:closure(self.D)
+		for a,b in pairs(temp_closure)do
+			if(b:isFinal(self.F))then
+				newF = union(newF,{v})
+				break
+			end
+		end
+	end
+	return newF
 end
