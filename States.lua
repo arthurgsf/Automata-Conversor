@@ -35,12 +35,16 @@ end
     Returns the next states reachable reading the symbol
 ]]
 function State.next(self, symbol, D)
-    return D[self.id][symbol];
+    if (D[self.id][symbol] ~=nil) then
+        return copy(D[self.id][symbol]);
+    else
+        return {}
+    end
 end
 
 --[[
     function State.closure(self, D)
-    Returns the next set of states reachable reading the symbol
+    returns all states reachable by performing only e-moves
 ]]
 function State.closure(self, D)
 
@@ -49,14 +53,27 @@ function State.closure(self, D)
     closure = union(closure, states)
 
     while(#states>0)do
-
         local temp = states[#states]:next('&',D)
         table.remove(states)
         closure = union(closure, temp)
         states = union(states, temp)
-
     end
-
     return closure
 
+end
+
+--[[
+    function State.extClosure(stateArray , D)
+    return extended closure for a finite set of satates
+]]
+
+function State.extClosure(stateArray , D)
+    local extClosure = {}
+
+    for k, state in pairs(stateArray) do
+        local temp_closure = state:closure(D)
+        extClosure = union(extClosure, temp_closure)
+    end
+
+    return extClosure
 end

@@ -8,10 +8,20 @@ function automata.new()
 
 	--methods
 	a.getE = automata.getE;
+	a.getNewE = automata.getNewE
+
 	a.getQ = automata.getQ;
+	a.getNewQ = automata.getNewQ
+
 	a.getF = automata.getF;
-	a.getD = automata.getD;
 	a.getNewF = automata.getNewF
+
+	a.getD = automata.getD;
+	a.getNewD = automata.getNewD
+
+	a.extDelta = automata.extDelta
+	a.toAfn = automata.toAfn
+
 	return a
 end
 
@@ -20,12 +30,8 @@ end
 	function automata.getE()
 	Used to get the char of Σ, returns a table of char Ex: {"a","b","c"}
 ]]
-function automata.getE(self)
+function automata.getE(self, str)
 	local e = {};
-	local str;
-
-	print("Insira as letras do alfabeto, separadas por espaços. Ex.: a b c");
-	str = io.read();
 
 	for q in string.gmatch(str, "%a") do
 		if(not find(e,q))then
@@ -46,13 +52,9 @@ end
 	{{id = "q1"},{id = "q2"}}
 ]]
 
-function automata.getQ(self)
+function automata.getQ(self , str)
 
 	local q = {}
-	local str
-
-	print("Insira uma sequência de estados separados por espaços. Ex.: q0 q1 q2")
-  	str = io.read()
 
 	for id in string.gmatch(str, "%a+%d+") do
 		if (not find(q,id))then
@@ -69,22 +71,8 @@ end
 	Used to get all final states of the automaton. Returns a table of char. Ex.: {"q0","q1"}
 ]]
 
-function automata.getF(self)
-
-	local q = self.Q
-	local f ={}
-	local str
-
-	print("Insira os estados finais do autômato, separados por espaços. Ex.: q0 q1 q2")
-	str = io.read()
-
-	for id in string.gmatch(str,"%a+%d+") do
-		local state = find(q,id)
-		if(state and not find(f,state.id))then
-			table.insert(f , state)
-		end
-	end
-	self.F = f
+function automata.getF(self, string)
+	self.F = readStates(string,self.Q)
 end
 
 
@@ -105,32 +93,45 @@ end
 	Ex.: a.D.q1.a //prints {"q1","q2"}
 ]]
 
-function automata.getD(self)
+-- function automata.getD(self)
+--
+-- 	local d = {}
+--
+-- 	for i,state in pairs(self.Q)do
+--
+-- 		d[state.id] = {}
+--
+-- 		for j,symbol in pairs(self.E)do
+--
+-- 			print("Delta de "..state.id.." lendo "..symbol)
+--
+-- 			local str = io.read()
+-- 			d[state.id][symbol] = {}
+--
+-- 			for id in string.gmatch(str,"%a+%d+")do
+-- 			end
+-- 		end
+-- 	end
+-- 	self.D = d
+-- end
 
-	local d = {}
 
-	for i,state in pairs(self.Q)do
-
-		d[state.id] = {}
-
-		for j,symbol in pairs(self.E)do
-
-			print("Delta de "..state.id.." lendo "..symbol)
-
-			local str = io.read()
-			d[state.id][symbol] = {}
-
-			for id in string.gmatch(str,"%a+%d+")do
-				local s = find(self.Q,id)
-
-				if(s and not find(d[state.id][symbol],s.id))then
-					table.insert(d[state.id][symbol],s)
-				end
-			end
+function automata.getD(self, line)
+	if(line~="")then
+		local stateId = line:sub(1,line:find("-") - 1):gsub("%s*", "")
+		self.D[stateId] = {}
+		local line = line:gsub(stateId,"",1)
+		for word in line:gmatch("[%a&][^,]*") do
+			local symbol = word:sub(1,1)
+			self.D[stateId][symbol] = readStates(word , self.Q)
 		end
 	end
-	self.D = d
 end
+
+--[[
+	function automata.getF()
+	Returns the new final set of states, which is an table of states
+]]
 
 function automata.getNewF(self)
 	local newF = {}
@@ -138,10 +139,77 @@ function automata.getNewF(self)
 		local temp_closure = v:closure(self.D)
 		for a,b in pairs(temp_closure)do
 			if(b:isFinal(self.F))then
-				newF = union(newF,{v})
+				local s = State.new(v.id)
+				newF = union(newF,{s})
 				break
 			end
 		end
 	end
 	return newF
+end
+
+
+--[[
+	function Automata.extDelta(self, array)
+	receives a table of char, and returns extended Delta for an automaton
+]]
+function automata.extDelta(self,state, array)
+
+	local closure = state:closure(self.D)
+
+	for i, symbol in pairs(array)do
+		local temp_closure = {}
+
+		for j ,state in pairs(closure) do
+			local table = self.D[state.id][symbol]
+			if(table)then
+				temp_closure = union(temp_closure, table)
+			end
+		end
+
+		closure = State.extClosure(temp_closure, self.D)
+
+	end
+
+	return closure
+end
+
+function automata.getNewQ(self)
+	local newQ = {}
+	for k,v in pairs(self.Q)do
+		table.insert(newQ,State.new(v.id))
+	end
+	return newQ
+end
+
+function automata.getNewE(self)
+	local newE = {}
+	for k, v in pairs(self.E) do
+		if (v~="&")then
+			table.insert(newE , v)
+		end
+	end
+	return newE
+end
+
+function automata.toAfn(self)
+	newAutomata = automata.new()
+	newAutomata.E = self:getNewE()
+	newAutomata.Q = self:getNewQ()
+	newAutomata.F = self:getNewF()
+	newAutomata.D = self:getNewD()
+	return newAutomata
+end
+
+function automata.getNewD(self)
+	local newD = {}
+	for i,state in pairs(self.Q) do
+		newD[state.id] = {}
+		for j , symbol in pairs(self.E) do
+			if(symbol ~= "&")then
+				newD[state.id][symbol] = self:extDelta(state , strtoarray(symbol))
+			end
+		end
+	end
+	return newD
 end

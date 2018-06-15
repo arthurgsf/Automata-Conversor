@@ -1,0 +1,11 @@
+abc
+q0q1q2q3q4q5q6q7
+q7
+q0 - a q0q1q2q4q7 ,b q0q1q2q4q3 ,c q0q1q2q4q5 ,
+q1 - a q7 ,b  ,c  ,
+q2 - a  ,b q3 ,c  ,
+q3 - a  ,b q7 ,c  ,
+q4 - a  ,b  ,c q5 ,
+q5 - a  ,b  ,c q6 ,
+q6 - a  ,b  ,c q7 ,
+q7 - a  ,b  ,c  ,
