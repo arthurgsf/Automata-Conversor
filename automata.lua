@@ -44,14 +44,6 @@ function automata.getE(self, str)
 	self.E = e
 end
 
-
---[[
-	function automata.getQ()
-	Used to get all states of the automaton. Returns a 2d table.
-	Ex.:
-	{{id = "q1"},{id = "q2"}}
-]]
-
 function automata.getQ(self , str)
 
 	local q = {}
