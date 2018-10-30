@@ -11,7 +11,7 @@ end
 
 function readfile(name)
     local a = automata.new()
-    local f = assert(io.open(name , "r"),"file does not exists")
+    local f = io.open(name , "r")
     local i = 1
     a.D = {}
     for line in f:lines() do
