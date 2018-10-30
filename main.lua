@@ -7,18 +7,22 @@ local inputs = io.read()
 for filename in inputs:gmatch("[^%s]*") do
 
     --[[
-        Conversion
+        Lê e armazena o autômato
     ]]
     local afe = readfile(filename)
+
+    --[[
+        Converte o autômato
+    ]]
     local afn = afe:toAfn()
 
     --[[ 
-        Destination file
+        Abre o arquivo de saída
     ]]
     local f = io.open(filename.."-converted", "w")
 
     --[[
-        writting in the destination file
+        Escreve o automato convertido no arquivo de saída
     ]]
     local temp = ""
 
